@@ -36,10 +36,11 @@ public class TeamService {
 
         employeeRepository.findByTeamAndRole(team, Role.MANAGER)
                         .ifPresent(team::setManager);
+        System.out.println(team.getManager());
         long count = employeeRepository.findByTeam(team)
                         .stream().count();
         team.setMemberCount(count);
-        
+
         teamRepository.save(team);
     }
 }

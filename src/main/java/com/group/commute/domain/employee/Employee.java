@@ -1,5 +1,6 @@
 package com.group.commute.domain.employee;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.group.commute.domain.team.Team;
 import com.group.commute.dto.employee.response.EmployeeResponseDto;
 import jakarta.persistence.*;

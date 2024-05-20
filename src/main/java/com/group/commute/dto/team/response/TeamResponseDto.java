@@ -5,10 +5,10 @@ import com.group.commute.domain.employee.Employee;
 public class TeamResponseDto {
 
     private String name;
-    private Employee manager;
+    private String manager;
     private long memberCount;
 
-    public TeamResponseDto(String name, Employee manager, long memberCount) {
+    public TeamResponseDto(String name, String manager, long memberCount) {
         this.name = name;
         this.manager = manager;
         this.memberCount = memberCount;
@@ -18,7 +18,7 @@ public class TeamResponseDto {
         return name;
     }
 
-    public Employee getManager() {
+    public String getManager() {
         return manager;
     }
 

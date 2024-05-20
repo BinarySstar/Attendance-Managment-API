@@ -1,5 +1,6 @@
 package com.group.commute.domain.team;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.group.commute.domain.employee.Employee;
 import com.group.commute.dto.team.response.TeamResponseDto;
 import jakarta.persistence.*;
@@ -57,7 +58,8 @@ public class Team {
     }
 
     public TeamResponseDto toDto() {
-        return new TeamResponseDto(this.name, this.manager, this.memberCount);
+        String managerName = (this.manager == null) ? null : this.manager.getName();
+        return new TeamResponseDto(this.name, managerName, this.memberCount);
     }
 
     public void setManager(Employee employee) {

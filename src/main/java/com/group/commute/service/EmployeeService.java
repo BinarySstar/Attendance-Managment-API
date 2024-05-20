@@ -2,6 +2,7 @@ package com.group.commute.service;
 
 import com.group.commute.domain.employee.Employee;
 import com.group.commute.domain.employee.EmployeeRepository;
+import com.group.commute.domain.employee.Role;
 import com.group.commute.domain.team.Team;
 import com.group.commute.domain.team.TeamRepository;
 import com.group.commute.dto.employee.request.EmployeeRequestDto;
@@ -35,6 +36,10 @@ public class EmployeeService {
         Team team = teamRepository.findByName(requestDto.getTeamName())
                 .orElseThrow(IllegalArgumentException::new);
         Employee employee = requestDto.toEntity(team);
+        if(employee.getRole() == Role.MANAGER) {
+            team.setManager(employee);
+        }
+        teamRepository.save(team);
         employeeRepository.save(employee);
     }
 }
