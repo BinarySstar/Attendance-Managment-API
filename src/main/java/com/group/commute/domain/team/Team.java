@@ -1,6 +1,7 @@
 package com.group.commute.domain.team;
 
-import com.group.commute.dto.team.TeamResponseDto;
+import com.group.commute.domain.employee.Employee;
+import com.group.commute.dto.team.response.TeamResponseDto;
 import jakarta.persistence.*;
 
 @Entity
@@ -15,19 +16,22 @@ public class Team {
     private String name;
 
     // 매니저 이름
-    @Column
-    private String manager;
+    @JoinColumn(name = "employee_id")
+    @OneToOne
+    private Employee manager;
 
     // 팀 멤버 인원 수
     @Column
-    private long memberCount;
+    private long memberCount = 0;
 
-    public Team(String name, String manager, long memberCount) {
+    public Team(String name, Employee manager) {
         this.name = name;
         this.manager = manager;
-        this.memberCount = memberCount;
     }
 
+    public Team(String name) {
+        this.name = name;
+    }
     protected Team() {
 
     }
@@ -40,7 +44,7 @@ public class Team {
         return name;
     }
 
-    public String getManager() {
+    public Employee getManager() {
         return manager;
     }
 
@@ -54,5 +58,13 @@ public class Team {
 
     public TeamResponseDto toDto() {
         return new TeamResponseDto(this.name, this.manager, this.memberCount);
+    }
+
+    public void setManager(Employee employee) {
+        this.manager = employee;
+    }
+
+    public void setMemberCount(long memberCount) {
+        this.memberCount = memberCount;
     }
 }

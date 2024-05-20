@@ -1,10 +1,9 @@
 package com.group.commute.controller;
 
-import com.group.commute.dto.team.TeamResponseDto;
+import com.group.commute.dto.team.request.TeamCreateRequestDto;
+import com.group.commute.dto.team.response.TeamResponseDto;
 import com.group.commute.service.TeamService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,5 +20,10 @@ public class TeamController {
     @GetMapping
     public List<TeamResponseDto> findAllTeam(){
         return teamService.findAllTeam();
+    }
+
+    @PostMapping
+    public void createTeam(@RequestBody TeamCreateRequestDto requestDto) {
+        teamService.createTeam(requestDto);
     }
 }
