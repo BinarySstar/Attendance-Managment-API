@@ -44,8 +44,8 @@ public class AttendanceService {
         attendances.forEach(attendance -> {
             if(attendance.getCheckInTime() != null && attendance.getCheckOutTime() != null) {
                 Duration duration = Duration.between(attendance.getCheckInTime(), attendance.getCheckOutTime());
-                long minutesWorked = duration.toMinutes();
-                responseDto.add(attendance.getDate(), minutesWorked);
+                long workingMinutes = duration.toMinutes();
+                responseDto.add(attendance.getDate(), workingMinutes);
             }
         });
         return responseDto;
@@ -54,7 +54,18 @@ public class AttendanceService {
     @Transactional
     public void checkIn(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(()-> new RuntimeException("존재하지 않는 직원입니다."));
+
+        attendanceRepository.findByEmployeeAndDate(employee, LocalDate.now())
+                .ifPresent(attendance -> {
+                    if(attendance.getCheckInTime() != null && attendance.getCheckOutTime() == null) {
+                        throw new RuntimeException("이미 출근한 직원입니다.");
+                    }
+                    if(attendance.getCheckOutTime() != null) {
+                        throw new RuntimeException("이미 퇴근한 직원입니다.");
+                    }
+                });
+
         Attendance attendance = new Attendance(employee, LocalDate.now(), LocalTime.now());
         attendanceRepository.save(attendance);
     }
@@ -62,7 +73,7 @@ public class AttendanceService {
     @Transactional
     public void checkOut(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new RuntimeException("employee를 찾지 못하였습니다!"));
+                .orElseThrow(() -> new RuntimeException("직원을 찾지 못하였습니다!"));
         Attendance attendance = attendanceRepository.findByEmployeeAndDate(employee, LocalDate.now())
                 .stream().findFirst().orElseThrow(() -> new RuntimeException("출근이 찍혀있지 않습니다."));
         attendance.setCheckOutTime(LocalTime.now());

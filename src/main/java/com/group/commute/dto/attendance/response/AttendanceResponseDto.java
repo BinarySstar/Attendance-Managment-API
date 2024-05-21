@@ -16,25 +16,25 @@ public class AttendanceResponseDto {
         return sum;
     }
 
-    public void add(LocalDate date, long minutesWorked) {
-        this.detail.add(new WorkDay(date, minutesWorked));
-        this.sum += minutesWorked;
+    public void add(LocalDate date, long workingMinutes) {
+        this.detail.add(new WorkDay(date, workingMinutes));
+        this.sum += workingMinutes;
     }
     public static class WorkDay {
         private LocalDate date;
-        private long minutesWorked;
+        private long workingMinutes;
 
-        public WorkDay(LocalDate date, long minutesWorked) {
+        public WorkDay(LocalDate date, long workingMinutes) {
             this.date = date;
-            this.minutesWorked = minutesWorked;
+            this.workingMinutes = workingMinutes;
         }
 
         public LocalDate getDate() {
             return date;
         }
 
-        public long getMinutesWorked() {
-            return minutesWorked;
+        public long getWorkingMinutes() {
+            return workingMinutes;
         }
     }
 }

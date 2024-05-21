@@ -35,6 +35,7 @@ public class EmployeeService {
     public void saveEmployee(EmployeeRequestDto requestDto) {
         Team team = teamRepository.findByName(requestDto.getTeamName())
                 .orElseThrow(IllegalArgumentException::new);
+        team.addMemberCount(1);
         Employee employee = requestDto.toEntity(team);
         if(employee.getRole() == Role.MANAGER) {
             team.setManager(employee);
