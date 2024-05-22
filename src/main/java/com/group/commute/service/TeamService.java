@@ -36,10 +36,12 @@ public class TeamService {
 
         employeeRepository.findByTeamAndRole(team, Role.MANAGER)
                         .ifPresent(team::setManager);
-        System.out.println(team.getManager());
-        long count = employeeRepository.findByTeam(team)
-                        .stream().count();
+
+        long count = employeeRepository.countByTeam(team);
         team.setMemberCount(count);
+
+        int dayOffApplyDay = requestDto.getDayOffApplyDay();
+        team.setDayOffApplyDay(dayOffApplyDay);
 
         teamRepository.save(team);
     }

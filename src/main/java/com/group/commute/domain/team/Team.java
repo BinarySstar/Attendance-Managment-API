@@ -25,6 +25,9 @@ public class Team {
     @Column
     private long memberCount = 0;
 
+    @Column
+    private int dayOffApplyday;
+
     public Team(String name, Employee manager) {
         this.name = name;
         this.manager = manager;
@@ -59,7 +62,7 @@ public class Team {
 
     public TeamResponseDto toDto() {
         String managerName = (this.manager == null) ? null : this.manager.getName();
-        return new TeamResponseDto(this.name, managerName, this.memberCount);
+        return new TeamResponseDto(this.name, managerName, this.memberCount, this.dayOffApplyday);
     }
 
     public void setManager(Employee employee) {
@@ -68,5 +71,13 @@ public class Team {
 
     public void setMemberCount(long memberCount) {
         this.memberCount = memberCount;
+    }
+
+    public int getDayOffApplyDay() {
+        return dayOffApplyday;
+    }
+
+    public void setDayOffApplyDay(int dayOffApplyDay) {
+        this.dayOffApplyday = dayOffApplyDay;
     }
 }

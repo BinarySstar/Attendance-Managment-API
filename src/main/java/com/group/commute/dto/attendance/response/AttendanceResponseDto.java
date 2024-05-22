@@ -16,17 +16,20 @@ public class AttendanceResponseDto {
         return sum;
     }
 
-    public void add(LocalDate date, long workingMinutes) {
-        this.detail.add(new WorkDay(date, workingMinutes));
+    public void add(LocalDate date, long workingMinutes, boolean usingDayOff) {
+        this.detail.add(new WorkDay(date, workingMinutes, usingDayOff));
         this.sum += workingMinutes;
     }
     public static class WorkDay {
         private LocalDate date;
         private long workingMinutes;
 
-        public WorkDay(LocalDate date, long workingMinutes) {
+        private boolean usingDayOff;
+
+        public WorkDay(LocalDate date, long workingMinutes, boolean usingDayOff) {
             this.date = date;
             this.workingMinutes = workingMinutes;
+            this.usingDayOff = usingDayOff;
         }
 
         public LocalDate getDate() {
@@ -35,6 +38,10 @@ public class AttendanceResponseDto {
 
         public long getWorkingMinutes() {
             return workingMinutes;
+        }
+
+        public boolean isUsingDayOff() {
+            return usingDayOff;
         }
     }
 }

@@ -16,11 +16,11 @@ public class DayOff {
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
 
-    private LocalDate localDate;
+    private LocalDate date;
 
-    public DayOff(Employee employee, LocalDate localDate) {
+    public DayOff(Employee employee, LocalDate date) {
         this.employee = employee;
-        this.localDate = localDate;
+        this.date = date;
     }
 
     protected DayOff() {
@@ -35,7 +35,7 @@ public class DayOff {
         return employee;
     }
 
-    public LocalDate getLocalDate() {
-        return localDate;
+    public LocalDate getDate() {
+        return date;
     }
 }

@@ -12,5 +12,5 @@ import java.util.Optional;
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Optional<Employee> findByTeamAndRole(Team team, Role role);
 
-    List<Employee> findByTeam(Team team);
+    long countByTeam(Team team);
 }

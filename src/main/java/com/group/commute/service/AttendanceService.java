@@ -2,6 +2,8 @@ package com.group.commute.service;
 
 import com.group.commute.domain.attendance.Attendance;
 import com.group.commute.domain.attendance.AttendanceRepository;
+import com.group.commute.domain.dayoff.DayOff;
+import com.group.commute.domain.dayoff.DayOffRepository;
 import com.group.commute.domain.employee.Employee;
 import com.group.commute.domain.employee.EmployeeRepository;
 import com.group.commute.dto.attendance.response.AttendanceResponseDto;
@@ -19,9 +21,14 @@ public class AttendanceService {
     private final AttendanceRepository attendanceRepository;
     private final EmployeeRepository employeeRepository;
 
-    public AttendanceService(AttendanceRepository attendanceRepository, EmployeeRepository employeeRepository) {
+    private final DayOffRepository dayOffRepository;
+
+    public AttendanceService(AttendanceRepository attendanceRepository,
+                             EmployeeRepository employeeRepository,
+                             DayOffRepository dayOffRepository) {
         this.attendanceRepository = attendanceRepository;
         this.employeeRepository = employeeRepository;
+        this.dayOffRepository = dayOffRepository;
     }
 
     @Transactional
@@ -35,18 +42,21 @@ public class AttendanceService {
 
         List<Attendance> attendances = attendanceRepository.findByEmployeeAndDateBetween(employee, startDate, endDate);
 
-        return calculateMinutesWorked(attendances);
+        return calculateWorkingMinutes(attendances);
     }
 
-    private AttendanceResponseDto calculateMinutesWorked(List<Attendance> attendances) {
+    private AttendanceResponseDto calculateWorkingMinutes(List<Attendance> attendances) {
         AttendanceResponseDto responseDto = new AttendanceResponseDto();
 
         attendances.forEach(attendance -> {
-            if(attendance.getCheckInTime() != null && attendance.getCheckOutTime() != null) {
+            boolean isUsingDayOff = attendance.isUsingDayOff();
+            long workingMinutes = 0;
+
+            if(!isUsingDayOff && attendance.getCheckInTime() != null && attendance.getCheckOutTime() != null) {
                 Duration duration = Duration.between(attendance.getCheckInTime(), attendance.getCheckOutTime());
-                long workingMinutes = duration.toMinutes();
-                responseDto.add(attendance.getDate(), workingMinutes);
+                workingMinutes = duration.toMinutes();
             }
+            responseDto.add(attendance.getDate(), workingMinutes, isUsingDayOff);
         });
         return responseDto;
     }
@@ -64,6 +74,9 @@ public class AttendanceService {
                     if(attendance.getCheckOutTime() != null) {
                         throw new RuntimeException("이미 퇴근한 직원입니다.");
                     }
+                    if(attendance.isUsingDayOff()) {
+                        throw new RuntimeException("금일 연차를 사용한 직원입니다.");
+                    }
                 });
 
         Attendance attendance = new Attendance(employee, LocalDate.now(), LocalTime.now());
@@ -79,4 +92,5 @@ public class AttendanceService {
         attendance.setCheckOutTime(LocalTime.now());
         attendanceRepository.save(attendance);
     }
+
 }

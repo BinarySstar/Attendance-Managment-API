@@ -23,6 +23,8 @@ public class Attendance {
 
     private LocalTime checkOutTime;
 
+    private boolean isUsingDayOff = false;
+
     public Attendance(Employee employee, LocalDate date, LocalTime checkInTime) {
         this.employee = employee;
         this.date = date;
@@ -67,5 +69,9 @@ public class Attendance {
 
     public void setCheckOutTime(LocalTime checkOutTime) {
         this.checkOutTime = checkOutTime;
+    }
+
+    public boolean isUsingDayOff() {
+        return isUsingDayOff;
     }
 }

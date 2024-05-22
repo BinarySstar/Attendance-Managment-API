@@ -8,10 +8,13 @@ public class TeamResponseDto {
     private String manager;
     private long memberCount;
 
-    public TeamResponseDto(String name, String manager, long memberCount) {
+    private int dayOffApplyday;
+
+    public TeamResponseDto(String name, String manager, long memberCount, int dayOffApplyday) {
         this.name = name;
         this.manager = manager;
         this.memberCount = memberCount;
+        this.dayOffApplyday = dayOffApplyday;
     }
 
     public String getName() {
@@ -24,5 +27,9 @@ public class TeamResponseDto {
 
     public long getMemberCount() {
         return memberCount;
+    }
+
+    public int getDayOffApplyday() {
+        return dayOffApplyday;
     }
 }
