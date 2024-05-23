@@ -97,13 +97,13 @@ public class AttendanceService {
 
     private void calculateOvertimeMinutes(Attendance attendance) {
         LocalDate date = attendance.getDate();
+        long overtimeMinutes = 0;
         if(isWeekendOrHoliday(date)) {
             Duration duration = Duration.between(attendance.getCheckInTime(), attendance.getCheckOutTime());
-            long overtimeMinutes = duration.toMinutes();
-
-            Overtime overtime = new Overtime(attendance.getEmployee(), overtimeMinutes, date);
-            overtimeRepository.save(overtime);
+            overtimeMinutes = duration.toMinutes();
         }
+        Overtime overtime = new Overtime(attendance.getEmployee(), overtimeMinutes, date);
+        overtimeRepository.save(overtime);
     }
 
     private boolean isWeekendOrHoliday(LocalDate date) {
