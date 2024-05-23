@@ -1,11 +1,11 @@
 package com.group.commute.dto.overtime.response;
 
-public class OverTimeResponseDto {
+public class OvertimeResponseDto {
     private Long id;
     private String name;
     private long overtimeMinutes = 0;
 
-    public OverTimeResponseDto(Long id, String name) {
+    public OvertimeResponseDto(Long id, String name) {
         this.id = id;
 
         StringBuilder sb = new StringBuilder(name);

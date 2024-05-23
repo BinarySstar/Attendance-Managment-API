@@ -1,7 +1,7 @@
 package com.group.commute.controller;
 
-import com.group.commute.dto.overtime.response.OverTimeResponseDto;
-import com.group.commute.service.OverTimeService;
+import com.group.commute.dto.overtime.response.OvertimeResponseDto;
+import com.group.commute.service.OvertimeService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,15 +10,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/overtime")
-public class OverTimeController {
+public class OvertimeController {
 
-    private final OverTimeService overTimeService;
+    private final OvertimeService overTimeService;
 
-    public OverTimeController(OverTimeService overTimeService) {
+    public OvertimeController(OvertimeService overTimeService) {
         this.overTimeService = overTimeService;
     }
 
-    public List<OverTimeResponseDto> getMonthlyOverTime(@RequestParam String yearMonth) {
+    public List<OvertimeResponseDto> getMonthlyOverTime(@RequestParam String yearMonth) {
         return overTimeService.getMonthlyOverTime(yearMonth);
     }
 }

@@ -6,29 +6,28 @@ import com.group.commute.domain.dayoff.DayOff;
 import com.group.commute.domain.dayoff.DayOffRepository;
 import com.group.commute.domain.employee.Employee;
 import com.group.commute.domain.employee.EmployeeRepository;
+import com.group.commute.domain.overtime.HolidayManager;
+import com.group.commute.domain.overtime.Overtime;
+import com.group.commute.domain.overtime.OvertimeRepository;
 import com.group.commute.dto.attendance.response.AttendanceResponseDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.YearMonth;
+import java.time.*;
 import java.util.List;
 
 @Service
 public class AttendanceService {
     private final AttendanceRepository attendanceRepository;
     private final EmployeeRepository employeeRepository;
-
-    private final DayOffRepository dayOffRepository;
+    private final OvertimeRepository overtimeRepository;
 
     public AttendanceService(AttendanceRepository attendanceRepository,
                              EmployeeRepository employeeRepository,
-                             DayOffRepository dayOffRepository) {
+                             OvertimeRepository overtimeRepository) {
         this.attendanceRepository = attendanceRepository;
         this.employeeRepository = employeeRepository;
-        this.dayOffRepository = dayOffRepository;
+        this.overtimeRepository = overtimeRepository;
     }
 
     @Transactional
@@ -90,7 +89,26 @@ public class AttendanceService {
         Attendance attendance = attendanceRepository.findByEmployeeAndDate(employee, LocalDate.now())
                 .stream().findFirst().orElseThrow(() -> new RuntimeException("출근이 찍혀있지 않습니다."));
         attendance.setCheckOutTime(LocalTime.now());
+
+        calculateOvertimeMinutes(attendance);
+        
         attendanceRepository.save(attendance);
     }
 
+    private void calculateOvertimeMinutes(Attendance attendance) {
+        LocalDate date = attendance.getDate();
+        if(isWeekendOrHoliday(date)) {
+            Duration duration = Duration.between(attendance.getCheckInTime(), attendance.getCheckOutTime());
+            long overtimeMinutes = duration.toMinutes();
+
+            Overtime overtime = new Overtime(attendance.getEmployee(), overtimeMinutes, date);
+            overtimeRepository.save(overtime);
+        }
+    }
+
+    private boolean isWeekendOrHoliday(LocalDate date) {
+        return date.getDayOfWeek() == DayOfWeek.SATURDAY ||
+                date.getDayOfWeek() == DayOfWeek.SUNDAY ||
+                HolidayManager.isHoliday(date);
+    }
 }

@@ -1,13 +1,13 @@
 package com.group.commute.domain.overtime;
 
 import com.group.commute.domain.employee.Employee;
-import com.group.commute.dto.overtime.response.OverTimeResponseDto;
+import com.group.commute.dto.overtime.response.OvertimeResponseDto;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
 @Entity
-public class OverTime {
+public class Overtime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,13 +21,13 @@ public class OverTime {
 
     private long overtimeMinutes;
 
-    public OverTime(Employee employee, long overtimeMinutes, LocalDate date) {
+    public Overtime(Employee employee, long overtimeMinutes, LocalDate date) {
         this.employee = employee;
         this.overtimeMinutes = overtimeMinutes;
         this.date = date;
     }
 
-    protected OverTime() {
+    protected Overtime() {
 
     }
 
@@ -47,7 +47,7 @@ public class OverTime {
         return date;
     }
 
-    public OverTimeResponseDto toDto(){
-        return new OverTimeResponseDto(id, employee.getName());
+    public OvertimeResponseDto toDto(){
+        return new OvertimeResponseDto(id, employee.getName());
     }
 }

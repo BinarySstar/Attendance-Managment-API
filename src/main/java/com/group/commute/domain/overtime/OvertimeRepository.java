@@ -7,6 +7,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface OverTimeRepository extends JpaRepository<OverTime, Long> {
-    List<OverTime> findByDateBetween(LocalDate startDate, LocalDate endDate);
+public interface OvertimeRepository extends JpaRepository<Overtime, Long> {
+    List<Overtime> findByDateBetween(LocalDate startDate, LocalDate endDate);
 }
